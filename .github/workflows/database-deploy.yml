@@ -1,0 +1,49 @@
+name: database-deployment
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '15 15 * * *'
+
+jobs:
+  build:
+    # spin up virtual machine with latest version of ubuntu
+    runs-on: ubuntu-latest
+    steps:
+    # checkout the repo
+    - uses: actions/checkout@v2
+    # set up python version 3.8 on the ubuntu operating system virtual machine
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    # install any require dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install arcgis
+        pip install geopandas
+        pip install python-decouple
+    # run python scripy to pull and transform arcgis data to csv to heroku postgres server
+    - name: Build database
+      env:
+        ARCGIS_ONLINE_USERNAME: ${{ secrets.ARCGIS_ONLINE_USERNAME }}
+        ARCGIS_ONLINE_PASSWORD: ${{ secrets.ARCGIS_ONLINE_PASSWORD }}
+        ARCGIS_ONLINE_URL: ${{ secrets.ARCGIS_ONLINE_URL }}
+        ARCGIS_ONLINE_FEATURE_ID: ${{ secrets.ARCGIS_ONLINE_FEATURE_ID }}
+
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: |
+        python 01_transform.py
+        heroku container:login
+        heroku pg:psql --app wrs-database < 02_build.sql
+    - name: Commit and push if it changed
+      run: |
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add .
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+          git push
