@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS surveys, sightings;
+
 CREATE TABLE surveys (
   id serial,
   ndow_id text PRIMARY KEY,
