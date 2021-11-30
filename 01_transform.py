@@ -51,7 +51,7 @@ for fl in range(len(feature_layer_collection.layers)):
             df["Speices"] = df["SpeciesCode_other"]
         else:
             df["Species"] = df["SpeciesCode"]
-    df[["SurveyID", "ObsTime", "Species", "activity", "ObsMPH", "distance", "SideRoad", "doubleback", "ObsTotal", "ObsComments", "x", "y"]].to_csv("sightings.csv", index=False)
+    df[["SurveyID", "ObsTime", "Species", "ObsTotal", "activity", "ObsMPH", "distance", "SideRoad", "doubleback", "ObsComments", "x", "y"]].to_csv("sightings.csv", index=False)
 
   ##### FORMATING survey TABLE ######
   if (layer_name == "Winter_Raptor_Survey"):
@@ -112,5 +112,4 @@ for fl in range(len(feature_layer_collection.layers)):
         else:
             df["EndingTemp"] = df["ActualETemp"]
 
-    df[["SurveyID", "StartDate", "RouteID", "CrewLeader", "CLAffiliation", "CLPhone", "CLEmail", "TotalObs", "ObsNames",
-    "StartSky", "StartingTemp", "StartWind","EndSky", "EndingTemp", "EndWind","Precip", "Ice", "Fog", "SnowCover"]].to_csv("surveys.csv", index=False)
+    df[["SurveyID", "StartDate", "RouteID", "CrewLeader", "CLAffiliation", "CLPhone", "CLEmail", "TotalObs", "ObsNames","Precip", "Ice", "Fog", "SnowCover", "RteComplete"]].to_csv("surveys.csv", index=False)
