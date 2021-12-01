@@ -37,3 +37,6 @@ CREATE TABLE sightings (
 );
 
 \copy sightings(ndow_id, sight_time, species, species_count, activity, speed, distance, direction, doubleback, comments, x, y) FROM 'sightings.csv' DELIMITER ',' CSV HEADER;
+
+ALTER TABLE sightings ADD COLUMN geom geometry(Point, 26911);
+UPDATE sightings SET geom = ST_SetSRID(ST_MakePoint(x, y), 26911);
