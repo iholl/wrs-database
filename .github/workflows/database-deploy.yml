@@ -39,6 +39,7 @@ jobs:
         python 01_transform.py
         heroku container:login
         heroku pg:psql --app wrs-database < 02_build.sql
+        /q
     - name: Commit and push if it changed
       run: |
           git config user.name "Automated"
