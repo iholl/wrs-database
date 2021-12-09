@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS surveys, sightings, speciesLookup;
 CREATE TABLE speciesLookup (
   species_id integer NOT NULL,
   species_name text NOT NULL
-)
+);
 
 \copy speciesLookup(species_id, species_name) FROM 'species_lookup_table.csv' DELIMITER ',' CSV HEADER;
 
@@ -41,7 +41,7 @@ CREATE TABLE sightings (
   doubleback text,
   comments text,
   x bigint,
-  y bigintS
+  y bigint
 );
 
 \copy sightings(ndow_id, sight_time, species, species_count, activity, speed, distance, direction, doubleback, comments, x, y) FROM 'sightings.csv' DELIMITER ',' CSV HEADER;
