@@ -1,5 +1,12 @@
 DROP TABLE IF EXISTS surveys, sightings;
 
+CREATE TABLE speciesLookup (
+  species_id integer NOT NULL,
+  species_name text NOT NULL
+)
+
+\copy speciesLookup(species_id, species_name) FROM 'species_lookup.csv' DELIMITER ',' CSV HEADER;
+
 CREATE TABLE surveys (
   id serial,
   ndow_id text PRIMARY KEY,
@@ -40,3 +47,8 @@ CREATE TABLE sightings (
 
 ALTER TABLE sightings ADD COLUMN geom geometry(Point, 26911);
 UPDATE sightings SET geom = ST_SetSRID(ST_MakePoint(x, y), 26911);
+
+SELECT * FROM sightings LEFT JOIN speciesLookup on sightings.species = speciesLookup.species_id;
+
+ALTER TABLE sightings ADD COLUMN speices_name(text);
+UPDATE sightings AS v SET species_name = s.species_name FROM speciesLookup AS s WHERE v.species = s.species_id;
