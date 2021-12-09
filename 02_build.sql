@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS surveys, sightings;
+DROP TABLE IF EXISTS surveys, sightings, speciesLookup;
 
 CREATE TABLE speciesLookup (
   species_id integer NOT NULL,
@@ -32,6 +32,7 @@ CREATE TABLE sightings (
   ndow_id text REFERENCES surveys (ndow_id), 
   sight_time text,
   species integer,
+  species_name text,
   species_count integer,
   activity text,
   speed integer,
@@ -40,7 +41,7 @@ CREATE TABLE sightings (
   doubleback text,
   comments text,
   x bigint,
-  y bigint
+  y bigintS
 );
 
 \copy sightings(ndow_id, sight_time, species, species_count, activity, speed, distance, direction, doubleback, comments, x, y) FROM 'sightings.csv' DELIMITER ',' CSV HEADER;
@@ -48,7 +49,4 @@ CREATE TABLE sightings (
 ALTER TABLE sightings ADD COLUMN geom geometry(Point, 26911);
 UPDATE sightings SET geom = ST_SetSRID(ST_MakePoint(x, y), 26911);
 
-SELECT * FROM sightings LEFT JOIN speciesLookup on sightings.species = speciesLookup.species_id;
-
-ALTER TABLE sightings ADD COLUMN speices_name text;
 UPDATE sightings AS v SET species_name = s.species_name FROM speciesLookup AS s WHERE v.species = s.species_id;
